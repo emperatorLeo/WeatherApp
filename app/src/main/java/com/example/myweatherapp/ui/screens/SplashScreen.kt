@@ -38,8 +38,9 @@ fun SplashScreen(activity: MainActivity) {
             .background(Color.White)
     )
 }
+
 @Preview
 @Composable
-fun SplashScreenPreview(){
+fun SplashScreenPreview() {
     SplashScreen(MainActivity())
 }

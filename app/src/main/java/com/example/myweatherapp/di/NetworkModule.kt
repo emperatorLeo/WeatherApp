@@ -16,7 +16,7 @@ object NetworkModule {
     @Provides
     fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://api.weatherapi.com/v1/")
+            .baseUrl("https://api.weatherapi.com/v1/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

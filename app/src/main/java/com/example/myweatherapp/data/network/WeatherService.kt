@@ -8,7 +8,7 @@ import retrofit2.Response
 
 class WeatherService @Inject constructor(private val api: WeatherApiClient) {
 
-    suspend fun getLocation(location: String): Response<WeatherLocation> {
+    suspend fun getLocation(location: String): Response<List<WeatherLocation>> {
         return withContext(Dispatchers.IO) {
             api.getLocation(location = location)
         }

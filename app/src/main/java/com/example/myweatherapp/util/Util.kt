@@ -1,4 +1,8 @@
 package com.example.myweatherapp.util
 
-// const val API_KEY = "ENTER YOUR API KEY HERE"
-const val API_KEY = "de5553176da64306b86153651221606"
+import com.example.myweatherapp.data.entities.WeatherLocation
+import com.example.myweatherapp.model.Location
+
+const val API_KEY = "ENTER YOUR API KEY HERE"
+
+fun WeatherLocation.mapToLocation(): Location = Location(name, country, latitude, longitude)

@@ -12,7 +12,7 @@ interface WeatherApiClient {
     suspend fun getLocation(
         @Query("key") apiKey: String = API_KEY,
         @Query("q") location: String
-    ): Response<WeatherLocation>
+    ): Response<List<WeatherLocation>>
 
     @GET("forecast.json")
     suspend fun getForecast(

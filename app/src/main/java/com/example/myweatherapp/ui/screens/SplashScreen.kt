@@ -1,35 +1,21 @@
 package com.example.myweatherapp.ui.screens
 
-import android.os.Build
-import android.view.WindowInsets
-import android.view.WindowInsetsController
-import android.view.WindowManager
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.res.imageResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import com.example.myweatherapp.R
-import com.example.myweatherapp.ui.MainActivity
+import com.example.myweatherapp.navigation.Screen
+import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen(activity: MainActivity) {
-    @Suppress("DEPRECATION")
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-        activity.window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
-    } else {
-        activity.window.insetsController?.apply {
-            hide(WindowInsets.Type.statusBars())
-            systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        }
-    }
+fun SplashScreen(navController: NavController) {
     Image(
         bitmap = ImageBitmap.imageResource(id = R.drawable.forecast_logo),
         contentDescription = "Splash screen Icon",
@@ -37,10 +23,10 @@ fun SplashScreen(activity: MainActivity) {
             .fillMaxSize()
             .background(Color.White)
     )
-}
 
-@Preview
-@Composable
-fun SplashScreenPreview() {
-    SplashScreen(MainActivity())
+    LaunchedEffect(key1 = true) {
+        delay(2500)
+        navController.popBackStack()
+        navController.navigate(Screen.Search.route)
+    }
 }

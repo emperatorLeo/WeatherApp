@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myweatherapp.model.Forecast
 import com.example.myweatherapp.model.Location
+import com.example.myweatherapp.ui.UiState
 import com.example.myweatherapp.usecase.GetForecastUseCase
 import com.example.myweatherapp.usecase.SearchLocationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,16 +23,20 @@ class MainViewModel @Inject constructor(
 
     private val _locationList = MutableLiveData<List<Location>>(listOf())
     val locationList: LiveData<List<Location>> = _locationList
+    private val _uiState = MutableLiveData<UiState>()
+    val uiState: LiveData<UiState> = _uiState
 
     private val _forecast = MutableLiveData<Forecast>()
     val forecast: LiveData<Forecast> = _forecast
 
     fun searchLocation(location: String) {
         viewModelScope.launch {
+            _uiState.value = UiState.Loading
             val response = searchLocationUseCase(location)
 
             if (response.isSuccessful) {
                 Log.d("Leo", "response: ${response.body()}")
+                _uiState.value = UiState.Success
                 _locationList.value = response.body()
             } else {
                 Log.d("Leo", "Error: ${response.message()}")
@@ -41,9 +46,11 @@ class MainViewModel @Inject constructor(
 
     fun getForecast(lat: Double, long: Double) {
         viewModelScope.launch {
+            _uiState.value = UiState.Loading
             val forecastResponse = getForecastUseCase(latitude = lat, longitude = long)
             if (forecastResponse.isSuccessful) {
                 Log.d("Leo viewModel", "response: ${forecastResponse.body()}")
+                _uiState.value = UiState.Success
                 _forecast.value = forecastResponse.body()
             } else {
                 Log.d("Leo viewModel", "Error: ${forecastResponse.message()}")

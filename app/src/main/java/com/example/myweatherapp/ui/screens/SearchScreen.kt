@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -32,8 +33,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.myweatherapp.model.Location
 import com.example.myweatherapp.navigation.Screen
+import com.example.myweatherapp.ui.UiState
 import com.example.myweatherapp.ui.listitem.LocationItemList
+import com.example.myweatherapp.ui.theme.lightBlue
 import com.example.myweatherapp.ui.viewmodel.MainViewModel
+import com.example.myweatherapp.ui.views.Loader
 
 @Composable
 fun SearchBarScreen(viewModel: MainViewModel, navController: NavController) {
@@ -41,22 +45,37 @@ fun SearchBarScreen(viewModel: MainViewModel, navController: NavController) {
         .locationList
         .observeAsState(listOf())
 
+    val uiState: UiState? by viewModel
+        .uiState
+        .observeAsState(null)
+
     Log.d("Leo search bar", "location list: $locationList")
 
-    Column {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(lightBlue)
+    ) {
         SearchBar(autoSearch = { viewModel.searchLocation(it) }, viewModel)
         Divider(color = Color.Black)
-
-        LazyColumn(
-            modifier = Modifier
-                .padding(top = 10.dp)
-                .fillMaxWidth()
-        ) {
-            items(locationList) { location ->
-                LocationItemList(location = location) { lat, long ->
-                    Log.d("Leo locationItem", "lat: $lat, long:$long")
-                    viewModel.getForecast(lat, long)
-                    navController.navigate(Screen.Detail.route)
+        if (uiState == UiState.Loading) {
+            Loader(
+                modifier = Modifier
+                    .padding(top = 100.dp)
+                    .align(Alignment.CenterHorizontally)
+            )
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .padding(top = 10.dp)
+                    .fillMaxWidth()
+            ) {
+                items(locationList) { location ->
+                    LocationItemList(location = location) { lat, long ->
+                        Log.d("Leo locationItem", "lat: $lat, long:$long")
+                        viewModel.getForecast(lat, long)
+                        navController.navigate(Screen.Detail.route)
+                    }
                 }
             }
         }

@@ -23,8 +23,10 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.AsyncImage
 import com.example.myweatherapp.model.Forecast
 import com.example.myweatherapp.model.ForecastItem
+import com.example.myweatherapp.ui.UiState
 import com.example.myweatherapp.ui.theme.lightBlue
 import com.example.myweatherapp.ui.viewmodel.MainViewModel
+import com.example.myweatherapp.ui.views.Loader
 
 @Composable
 fun DetailScreen(viewModel: MainViewModel) {
@@ -32,27 +34,37 @@ fun DetailScreen(viewModel: MainViewModel) {
         .forecast
         .observeAsState(Forecast("", listOf()))
 
-    Details(forecast)
+    val uiState: UiState? by viewModel
+        .uiState
+        .observeAsState(null)
+
+    Details(forecast, uiState!!)
 }
 
 @Composable
-private fun Details(forecast: Forecast) {
+private fun Details(forecast: Forecast, uiState: UiState) {
     val modifier = Modifier
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(lightBlue)
     ) {
-        Text(
-            modifier = Modifier
-                .padding(top = 50.dp)
-                .align(Alignment.CenterHorizontally),
-            text = forecast.place,
-            color = Color.Black,
-            fontSize = 20.sp,
-            fontStyle = FontStyle.Italic
-        )
-        if (forecast.list.isNotEmpty()) {
+        if (uiState == UiState.Loading) {
+            Loader(
+                modifier = Modifier
+                    .padding(top = 100.dp)
+                    .align(Alignment.CenterHorizontally)
+            )
+        } else {
+            Text(
+                modifier = Modifier
+                    .padding(top = 50.dp)
+                    .align(Alignment.CenterHorizontally),
+                text = forecast.place,
+                color = Color.Black,
+                fontSize = 20.sp,
+                fontStyle = FontStyle.Italic
+            )
             ForecastItem(modifier = modifier.padding(top = 60.dp), forecastItem = forecast.list[0])
             ForecastItem(modifier = modifier.padding(top = 70.dp), forecastItem = forecast.list[1])
             ForecastItem(
@@ -150,5 +162,5 @@ fun ForecastItem(modifier: Modifier, visibility: Boolean = true, forecastItem: F
 @Composable
 @Preview(showBackground = true)
 private fun DetailScreenPreview() {
-    Details(Forecast("Place", listOf()))
+    Details(Forecast("Place", listOf()), UiState.Success)
 }

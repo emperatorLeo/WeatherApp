@@ -17,11 +17,11 @@ import androidx.compose.ui.unit.sp
 import com.example.myweatherapp.model.Location
 
 @Composable
-fun LocationItemList(location: Location, onClick: () -> Unit) {
+fun LocationItemList(location: Location, onClick: (lat: Double, long: Double) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick.invoke() }
+            .clickable { onClick.invoke(location.lat, location.long) }
     ) {
         Text(
             modifier = Modifier.padding(start = 10.dp, bottom = 10.dp),
@@ -48,5 +48,6 @@ fun LocationItemList(location: Location, onClick: () -> Unit) {
 @Composable
 @Preview
 private fun LocationItemListPreview() {
-    LocationItemList(location = Location("name", "country", 10.00, 26.30)) {}
+    LocationItemList(location = Location("name", "country", 10.00, 26.30)) { lat, long ->
+    }
 }

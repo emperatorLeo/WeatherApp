@@ -2,7 +2,7 @@ package com.example.myweatherapp.data.entities
 
 import com.google.gson.annotations.SerializedName
 
-data class WeatherLocation(
+data class LocationResponse(
     val id: Int,
     val name: String,
     val region: String,

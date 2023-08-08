@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.myweatherapp.ui.screens.DetailScreen
 import com.example.myweatherapp.ui.screens.SearchBarScreen
 import com.example.myweatherapp.ui.screens.SplashScreen
 import com.example.myweatherapp.ui.viewmodel.MainViewModel
@@ -21,7 +22,11 @@ fun AppNavigation(viewModel: MainViewModel) {
         }
 
         composable(Screen.Search.route) {
-            SearchBarScreen(viewModel = viewModel)
+            SearchBarScreen(viewModel = viewModel, navController)
+        }
+
+        composable(Screen.Detail.route) {
+            DetailScreen(viewModel = viewModel)
         }
     }
 }

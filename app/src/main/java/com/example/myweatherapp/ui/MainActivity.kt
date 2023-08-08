@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import com.example.myweatherapp.navigation.AppNavigation
+import com.example.myweatherapp.ui.theme.MyWeatherAppTheme
 import com.example.myweatherapp.ui.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -14,7 +15,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AppNavigation(viewModel = viewModel)
+            MyWeatherAppTheme {
+                AppNavigation(viewModel = viewModel)
+            }
         }
     }
 }

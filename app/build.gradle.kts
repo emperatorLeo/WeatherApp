@@ -11,12 +11,12 @@ plugins {
 
 android {
     namespace = "com.example.myweatherapp"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.myweatherapp"
         minSdk = 21
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -69,6 +69,12 @@ dependencies {
 
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.6.0")
+
+    // Constraint layout
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha11")
+
+    // Cargar imagenes
+    implementation("io.coil-kt:coil-compose:2.4.0")
 
     // Hilt dependencies
     implementation("com.google.dagger:hilt-android:2.45")

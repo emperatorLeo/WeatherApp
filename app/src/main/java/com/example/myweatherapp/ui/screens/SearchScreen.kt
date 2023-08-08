@@ -1,7 +1,7 @@
 package com.example.myweatherapp.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,21 +28,23 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.myweatherapp.model.Location
+import com.example.myweatherapp.navigation.Screen
 import com.example.myweatherapp.ui.listitem.LocationItemList
 import com.example.myweatherapp.ui.viewmodel.MainViewModel
 
 @Composable
-fun SearchBarScreen(viewModel: MainViewModel) {
+fun SearchBarScreen(viewModel: MainViewModel, navController: NavController) {
     val locationList: List<Location> by viewModel
         .locationList
         .observeAsState(listOf())
 
+    Log.d("Leo search bar", "location list: $locationList")
+
     Column {
-        SearchBar(autoSearch = { }) {
-        }
+        SearchBar(autoSearch = { viewModel.searchLocation(it) }, viewModel)
         Divider(color = Color.Black)
 
         LazyColumn(
@@ -51,7 +53,10 @@ fun SearchBarScreen(viewModel: MainViewModel) {
                 .fillMaxWidth()
         ) {
             items(locationList) { location ->
-                LocationItemList(location = location) {
+                LocationItemList(location = location) { lat, long ->
+                    Log.d("Leo locationItem", "lat: $lat, long:$long")
+                    viewModel.getForecast(lat, long)
+                    navController.navigate(Screen.Detail.route)
                 }
             }
         }
@@ -60,7 +65,7 @@ fun SearchBarScreen(viewModel: MainViewModel) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SearchBar(autoSearch: () -> Unit, onSearchClick: () -> Unit) {
+private fun SearchBar(autoSearch: (String) -> Unit, viewModel: MainViewModel) {
     val modifier = Modifier.fillMaxWidth()
     var text by remember {
         mutableStateOf("")
@@ -85,17 +90,18 @@ private fun SearchBar(autoSearch: () -> Unit, onSearchClick: () -> Unit) {
                 text = it
 
                 if (it.length > 2) {
-                    autoSearch.invoke()
+                    autoSearch.invoke(text)
                 }
             }
         )
         IconButton(
-            onClick = onSearchClick,
+            onClick = {
+                viewModel.searchLocation(text)
+            },
             modifier = Modifier
                 .padding(start = 20.dp)
                 .size(width = 70.dp, height = 30.dp)
                 .background(Color.LightGray, shape = CircleShape)
-                .clickable { onSearchClick.invoke() }
         ) {
             Icon(
                 imageVector = Icons.Default.Search,
@@ -104,10 +110,4 @@ private fun SearchBar(autoSearch: () -> Unit, onSearchClick: () -> Unit) {
             )
         }
     }
-}
-
-@Composable
-@Preview
-private fun SearchBarPreview() {
-    SearchBar(autoSearch = {}, onSearchClick = {})
 }

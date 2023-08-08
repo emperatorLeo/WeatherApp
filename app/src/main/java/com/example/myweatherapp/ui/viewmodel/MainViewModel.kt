@@ -36,32 +36,6 @@ class MainViewModel @Inject constructor(
         _uiState.value = UiState.Error.UnknownError
     }
 
-    /*fun searchLocation(location: String) {
-        if (!connectionManager()) {
-            _uiState.value = UiState.Error.ConnectionError
-        } else {
-            viewModelScope.launch(coroutineExceptionHandler) {
-                if (location.isEmpty()) {
-                    _uiState.value = UiState.Error.EmptySearch
-                } else {
-                    _uiState.value = UiState.Loading
-                    val response = searchLocationUseCase(location)
-
-                    if (response.isSuccessful) {
-                        if (response.body()!!.isEmpty()) {
-                            _uiState.value = UiState.Error.EmptyResultError
-                        } else {
-                            _uiState.value = UiState.Success
-                            _locationList.value = response.body()
-                        }
-                    } else {
-                        errorHandler(response.raw().code)
-                    }
-                }
-            }
-        }
-    }*/
-
     fun searchLocation(location: String) {
         when {
             (!connectionManager()) -> {

@@ -1,6 +1,5 @@
 package com.example.myweatherapp.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,12 +28,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.myweatherapp.R
 import com.example.myweatherapp.model.Location
 import com.example.myweatherapp.navigation.Screen
-import com.example.myweatherapp.ui.UiState
 import com.example.myweatherapp.ui.listitem.LocationItemList
+import com.example.myweatherapp.ui.states.ErrorScreen
+import com.example.myweatherapp.ui.states.UiState
 import com.example.myweatherapp.ui.theme.lightBlue
 import com.example.myweatherapp.ui.viewmodel.MainViewModel
 import com.example.myweatherapp.ui.views.Loader
@@ -49,8 +52,6 @@ fun SearchBarScreen(viewModel: MainViewModel, navController: NavController) {
         .uiState
         .observeAsState(null)
 
-    Log.d("Leo search bar", "location list: $locationList")
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -58,23 +59,77 @@ fun SearchBarScreen(viewModel: MainViewModel, navController: NavController) {
     ) {
         SearchBar(autoSearch = { viewModel.searchLocation(it) }, viewModel)
         Divider(color = Color.Black)
-        if (uiState == UiState.Loading) {
-            Loader(
-                modifier = Modifier
-                    .padding(top = 100.dp)
-                    .align(Alignment.CenterHorizontally)
-            )
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .padding(top = 10.dp)
-                    .fillMaxWidth()
-            ) {
-                items(locationList) { location ->
-                    LocationItemList(location = location) { lat, long ->
-                        Log.d("Leo locationItem", "lat: $lat, long:$long")
-                        viewModel.getForecast(lat, long)
-                        navController.navigate(Screen.Detail.route)
+        when (uiState) {
+            UiState.Loading -> {
+                Loader(
+                    modifier = Modifier
+                        .padding(top = 100.dp)
+                        .align(Alignment.CenterHorizontally)
+                )
+            }
+
+            UiState.Error.EmptySearch -> {
+                ErrorScreen(
+                    message = stringResource(id = R.string.error_empty_search),
+                    icon = painterResource(id = R.drawable.nothing_to_search)
+                )
+            }
+
+            UiState.Error.ConnectionError -> {
+                ErrorScreen(
+                    message = stringResource(id = R.string.error_no_internet),
+                    icon = painterResource(id = R.drawable.no_internet)
+                )
+            }
+
+            UiState.Error.ServerError -> {
+                ErrorScreen(
+                    message = stringResource(id = R.string.error_server),
+                    icon = painterResource(id = R.drawable.server_issue)
+                )
+            }
+
+            UiState.Error.BadRequestError -> {
+                ErrorScreen(
+                    message = stringResource(id = R.string.error_bad_request),
+                    icon = painterResource(id = R.drawable.bad_request)
+                )
+            }
+
+            UiState.Error.TimeOut -> {
+                ErrorScreen(
+                    message = stringResource(id = R.string.error_timeout),
+                    icon = painterResource(id = R.drawable.time_out)
+                )
+            }
+
+            UiState.Error.UnknownError -> {
+                ErrorScreen(
+                    message = stringResource(id = R.string.error_unknown),
+                    icon = painterResource(id = R.drawable.mysterious_error)
+                )
+            }
+
+            UiState.Error.EmptyResultError -> {
+                ErrorScreen(
+                    message = stringResource(id = R.string.error_empty_result),
+                    icon = painterResource(
+                        id = R.drawable.empty_result
+                    )
+                )
+            }
+
+            else -> {
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(top = 10.dp)
+                        .fillMaxWidth()
+                ) {
+                    items(locationList) { location ->
+                        LocationItemList(location = location) { lat, long ->
+                            viewModel.getForecast(lat, long)
+                            navController.navigate(Screen.Detail.route)
+                        }
                     }
                 }
             }

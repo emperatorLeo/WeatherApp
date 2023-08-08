@@ -23,7 +23,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.AsyncImage
 import com.example.myweatherapp.model.Forecast
 import com.example.myweatherapp.model.ForecastItem
-import com.example.myweatherapp.ui.UiState
+import com.example.myweatherapp.ui.states.UiState
 import com.example.myweatherapp.ui.theme.lightBlue
 import com.example.myweatherapp.ui.viewmodel.MainViewModel
 import com.example.myweatherapp.ui.views.Loader

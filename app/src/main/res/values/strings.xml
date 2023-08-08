@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">MyWeatherApp</string>
+    <string name="error_empty_search">Ups! seems there is nothing to search for</string>
+    <string name="error_no_internet">There is no internet service, please check your connections</string>
+    <string name="error_server">Sorry we have some server issues</string>
+    <string name="error_bad_request">Sorry we had some problems with your request, you could try it again later</string>
+    <string name="error_timeout">Apologize, we ran out of time with your request, try it again</string>
+    <string name="error_unknown">We had a mysterious error here, sorry</string>
+    <string name="error_empty_result">Sorry, we could not found your city</string>
 </resources>

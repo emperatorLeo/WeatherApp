@@ -1,6 +1,5 @@
 package com.example.myweatherapp.usecase
 
-import android.util.Log
 import com.example.myweatherapp.data.WeatherRepository
 import com.example.myweatherapp.model.Forecast
 import com.example.myweatherapp.util.mapToForecast
@@ -13,7 +12,6 @@ class GetForecastUseCase @Inject constructor(private val repository: WeatherRepo
         val response = repository.getForecast(latitude, longitude)
 
         return if (response.isSuccessful) {
-            Log.d("Leo UseCase", "Body: ${response.body()}")
             val responseMapped = response.body()?.mapToForecast()
             Response.success(responseMapped)
         } else {

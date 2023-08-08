@@ -1,4 +1,4 @@
-package com.example.myweatherapp.ui
+package com.example.myweatherapp.ui.states
 
 sealed class UiState {
     object Loading : UiState()
@@ -9,5 +9,9 @@ sealed class UiState {
         object ServerError : Error()
         object BadRequestError : Error()
         object ConnectionError : Error()
+        object EmptySearch : Error()
+        object TimeOut : Error()
+        object UnknownError : Error()
+        object EmptyResultError : Error()
     }
 }

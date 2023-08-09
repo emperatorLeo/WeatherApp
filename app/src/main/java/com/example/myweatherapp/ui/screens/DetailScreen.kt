@@ -15,14 +15,18 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.AsyncImage
+import com.example.myweatherapp.R
 import com.example.myweatherapp.model.Forecast
 import com.example.myweatherapp.model.ForecastItem
+import com.example.myweatherapp.ui.states.ErrorScreen
 import com.example.myweatherapp.ui.states.UiState
 import com.example.myweatherapp.ui.theme.lightBlue
 import com.example.myweatherapp.ui.viewmodel.MainViewModel
@@ -49,29 +53,74 @@ private fun Details(forecast: Forecast, uiState: UiState) {
             .fillMaxSize()
             .background(lightBlue)
     ) {
-        if (uiState == UiState.Loading) {
-            Loader(
-                modifier = Modifier
-                    .padding(top = 100.dp)
-                    .align(Alignment.CenterHorizontally)
-            )
-        } else {
-            Text(
-                modifier = Modifier
-                    .padding(top = 50.dp)
-                    .align(Alignment.CenterHorizontally),
-                text = forecast.place,
-                color = Color.Black,
-                fontSize = 20.sp,
-                fontStyle = FontStyle.Italic
-            )
-            ForecastItem(modifier = modifier.padding(top = 60.dp), forecastItem = forecast.list[0])
-            ForecastItem(modifier = modifier.padding(top = 70.dp), forecastItem = forecast.list[1])
-            ForecastItem(
-                modifier = modifier.padding(top = 60.dp),
-                false,
-                forecastItem = forecast.list[2]
-            )
+        when (uiState) {
+            UiState.Loading -> {
+                Loader(
+                    modifier = Modifier
+                        .padding(top = 100.dp)
+                        .align(Alignment.CenterHorizontally)
+                )
+            }
+
+            UiState.Error.ConnectionError -> {
+                ErrorScreen(
+                    message = stringResource(id = R.string.error_no_internet),
+                    icon = painterResource(id = R.drawable.no_internet)
+                )
+            }
+
+            UiState.Error.ServerError -> {
+                ErrorScreen(
+                    message = stringResource(id = R.string.error_server),
+                    icon = painterResource(id = R.drawable.server_issue)
+                )
+            }
+
+            UiState.Error.BadRequestError -> {
+                ErrorScreen(
+                    message = stringResource(id = R.string.error_bad_request),
+                    icon = painterResource(id = R.drawable.bad_request)
+                )
+            }
+
+            UiState.Error.TimeOut -> {
+                ErrorScreen(
+                    message = stringResource(id = R.string.error_timeout),
+                    icon = painterResource(id = R.drawable.time_out)
+                )
+            }
+
+            UiState.Error.UnknownError -> {
+                ErrorScreen(
+                    message = stringResource(id = R.string.error_unknown),
+                    icon = painterResource(id = R.drawable.mysterious_error)
+                )
+            }
+
+            else -> {
+                Text(
+                    modifier = Modifier
+                        .padding(top = 50.dp)
+                        .align(Alignment.CenterHorizontally),
+                    text = forecast.place,
+                    color = Color.Black,
+                    fontSize = 20.sp,
+                    fontStyle = FontStyle.Italic
+                )
+                ForecastItem(
+                    modifier = modifier.padding(top = 60.dp),
+                    forecastItem = forecast.list[0]
+                )
+                ForecastItem(
+                    modifier = modifier.padding(top = 70.dp),
+                    forecastItem = forecast.list[1]
+                )
+                ForecastItem(
+                    modifier = modifier.padding(top = 60.dp),
+                    false,
+                    forecastItem = forecast.list[2]
+                )
+            }
         }
     }
 }

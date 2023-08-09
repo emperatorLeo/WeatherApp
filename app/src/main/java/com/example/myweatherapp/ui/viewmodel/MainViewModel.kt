@@ -49,6 +49,7 @@ class MainViewModel @Inject constructor(
             else -> {
                 viewModelScope.launch(coroutineExceptionHandler) {
                     _uiState.value = UiState.Loading
+
                     val response = searchLocationUseCase(location)
 
                     if (response.isSuccessful && response.body()!!.isNotEmpty()) {
@@ -63,14 +64,20 @@ class MainViewModel @Inject constructor(
     }
 
     fun getForecast(lat: Double, long: Double) {
-        viewModelScope.launch(coroutineExceptionHandler) {
-            _uiState.value = UiState.Loading
-            val forecastResponse = getForecastUseCase(latitude = lat, longitude = long)
-            if (forecastResponse.isSuccessful) {
-                _uiState.value = UiState.Success
-                _forecast.value = forecastResponse.body()
-            } else {
-                errorHandler(forecastResponse.raw().code)
+        if (!connectionManager()) {
+            _uiState.value = UiState.Error.ConnectionError
+        } else {
+            viewModelScope.launch(coroutineExceptionHandler) {
+                _uiState.value = UiState.Loading
+
+                val forecastResponse = getForecastUseCase(latitude = lat, longitude = long)
+
+                if (forecastResponse.isSuccessful) {
+                    _uiState.value = UiState.Success
+                    _forecast.value = forecastResponse.body()
+                } else {
+                    errorHandler(forecastResponse.raw().code)
+                }
             }
         }
     }

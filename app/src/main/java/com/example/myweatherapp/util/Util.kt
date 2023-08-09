@@ -7,8 +7,6 @@ import com.example.myweatherapp.model.ForecastDay
 import com.example.myweatherapp.model.ForecastItem
 import com.example.myweatherapp.model.Location
 
-const val API_KEY = "ENTER YOUR API KEY HERE"
-
 fun LocationResponse.mapToLocation(): Location = Location(name, country, latitude, longitude)
 
 fun ForecastResponse.mapToForecast(): Forecast {

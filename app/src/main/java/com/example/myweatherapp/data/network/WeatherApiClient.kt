@@ -2,7 +2,6 @@ package com.example.myweatherapp.data.network
 
 import com.example.myweatherapp.data.entities.ForecastResponse
 import com.example.myweatherapp.data.entities.LocationResponse
-import com.example.myweatherapp.util.API_KEY
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -22,3 +21,4 @@ interface WeatherApiClient {
         @Query("days") days: Int = 3
     ): Response<ForecastResponse>
 }
+private const val API_KEY = "ENTER YOUR API KEY HERE"

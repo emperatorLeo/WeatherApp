@@ -23,7 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -141,7 +141,7 @@ fun SearchBarScreen(viewModel: MainViewModel, navController: NavController) {
 @Composable
 private fun SearchBar(autoSearch: (String) -> Unit, viewModel: MainViewModel) {
     val modifier = Modifier.fillMaxWidth()
-    var text by remember {
+    var text by rememberSaveable {
         mutableStateOf("")
     }
 

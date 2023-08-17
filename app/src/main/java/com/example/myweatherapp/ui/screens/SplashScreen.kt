@@ -24,7 +24,7 @@ fun SplashScreen(navController: NavController) {
             .background(Color.White)
     )
 
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(Unit) {
         delay(2500)
         navController.popBackStack()
         navController.navigate(Screen.Search.route)

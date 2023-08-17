@@ -23,6 +23,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -41,6 +43,8 @@ import com.example.myweatherapp.ui.states.UiState
 import com.example.myweatherapp.ui.theme.lightBlue
 import com.example.myweatherapp.ui.viewmodel.MainViewModel
 import com.example.myweatherapp.ui.views.Loader
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 
 @Composable
 fun SearchBarScreen(viewModel: MainViewModel, navController: NavController) {
@@ -144,6 +148,8 @@ private fun SearchBar(autoSearch: (String) -> Unit, viewModel: MainViewModel) {
     var text by rememberSaveable {
         mutableStateOf("")
     }
+    val scope = rememberCoroutineScope()
+    var currentJob by remember { mutableStateOf<Job?>(null) }
 
     Row(
         modifier = modifier
@@ -164,7 +170,10 @@ private fun SearchBar(autoSearch: (String) -> Unit, viewModel: MainViewModel) {
                 text = it
 
                 if (it.length > 2) {
-                    autoSearch.invoke(text)
+                    currentJob?.cancel()
+                    currentJob = scope.async {
+                        autoSearch.invoke(text)
+                    }
                 }
             }
         )

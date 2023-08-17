@@ -45,7 +45,9 @@ import com.example.myweatherapp.ui.viewmodel.MainViewModel
 import com.example.myweatherapp.ui.views.Loader
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 
+private const val SEARCH_DELAY_MILLIS = 300L
 @Composable
 fun SearchBarScreen(viewModel: MainViewModel, navController: NavController) {
     val locationList: List<Location> by viewModel
@@ -172,6 +174,7 @@ private fun SearchBar(autoSearch: (String) -> Unit, viewModel: MainViewModel) {
                 if (it.length > 2) {
                     currentJob?.cancel()
                     currentJob = scope.async {
+                        delay(SEARCH_DELAY_MILLIS)
                         autoSearch.invoke(text)
                     }
                 }

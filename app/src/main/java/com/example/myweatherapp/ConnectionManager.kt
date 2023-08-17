@@ -14,28 +14,4 @@ class ConnectionManager @Inject constructor(private val context: Context) {
 
         return networkInfo?.isConnected ?: false
     }
-
-    /* override fun observer(): Flow<ConnectivityObserver.Status> {
-         return callbackFlow {
-             val callback = object : ConnectivityManager.NetworkCallback() {
-                 override fun onAvailable(network: Network) {
-                     super.onAvailable(network)
-                     launch {
-                         send(ConnectivityObserver.Status.Available)
-                     }
-                 }
-
-                 override fun onUnavailable() {
-                     super.onUnavailable()
-                     launch {
-                         send(ConnectivityObserver.Status.Unavailable)
-                     }
-                 }
-             }
-             connectivityManager.registerDefaultNetworkCallback(callback)
-             awaitClose {
-                 connectivityManager.unregisterNetworkCallback(callback)
-             }
-         }
-     }*/
 }
